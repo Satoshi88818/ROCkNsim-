@@ -1,0 +1,14 @@
+A simulator for an optical atomic clock lets you explore the key physics without needing a $10M lab. Let me think through what's worth modeling and build it.The most instructive simulator would model three coupled physical systems that together determine clock performance: the laser stability, the atomic response, and the environmental perturbations. Here's what's worth including and why:
+
+- The laser frequency noise (Allan deviation) shows how the reference drifts over time — the core metric for any clock
+- The Ramsey fringe pattern shows how the atoms respond to the interrogating laser — this is how frequency error is actually detected
+- Environmental inputs (vibration, temperature, acceleration) show how they corrupt the output — directly relevant to the ROCkN challenge
+- Holdover simulation shows what happens to timing accuracy when GPS is lostHere's what each tab is actually modeling:
+
+**Laser stability** uses the standard Allan deviation model — white frequency noise (which averages down as 1/√τ) plus a flicker floor (which doesn't average away, set by the atomic transition itself). The Dick effect slider adds the penalty from interrogating atoms with a noisy local oscillator — a real engineering tradeoff where the local oscillator's noise leaks into the measurement through aliasing.
+
+**Ramsey fringes** computes the actual quantum transition probability: P = cos²(π·Δf·T) where T is the interrogation time and Δf is the laser detuning from the atomic resonance. Longer T makes the central fringe narrower and the clock more sensitive, but also more vulnerable to laser decoherence — you can see the fringe wash out as you increase the linewidth slider. The quantum projection noise (shot noise from a finite number of atoms) sets the fundamental sensitivity floor.
+
+**Environmental noise** is the most ROCkN-relevant tab. It simulates how vibration couples into frequency shifts through the sensitivity coefficient of the lattice trap (roughly 10⁻¹⁴ per g), and how thermal drift shifts the transition frequency. Switch between platforms and watch the frequency trace go from clean (lab bench) to chaotic (fighter jet). The isolation slider represents how well your vibration isolation system works.
+
+**Holdover** compares clock technologies head-to-head on the key military requirement: how long can you maintain timing accuracy after GPS goes away? Try setting 1 ns precision requirement and comparing a Cs clock (a few hours) against an optical clock (months) — that's the entire motivation for ROCkN in a single chart.
